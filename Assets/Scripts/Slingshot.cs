@@ -14,6 +14,10 @@ public class Slingshot : MonoBehaviour
     public GameObject projectile;
     public bool aimingMode;
 
+    public LineRenderer band;
+    public GameObject leftArm;
+    public GameObject rightArm;
+
     private Rigidbody projectileRigidbody;
 
     public static Vector3 LAUNCH_POS
@@ -34,6 +38,16 @@ public class Slingshot : MonoBehaviour
         launchPoint = launchPointTrans.gameObject;
         launchPoint.SetActive(false);
         launchPos = launchPointTrans.position;
+
+        // Slingshot band GOs and components
+        band = S.GetComponent<LineRenderer>();
+        leftArm = GameObject.Find("LeftArm");
+        rightArm = GameObject.Find("RightArm");
+    }
+
+    void Start()
+    {
+        ResetBand();
     }
 
     void OnMouseEnter()
@@ -44,6 +58,7 @@ public class Slingshot : MonoBehaviour
     void OnMouseExit()
     {
         launchPoint.SetActive(false);
+        ResetBand();
     }
 
     void OnMouseDown()
@@ -60,8 +75,13 @@ public class Slingshot : MonoBehaviour
 
     void Update()
     {
+        if (launchPoint.activeSelf)
+            band.SetPosition(1, Camera.main.ScreenToWorldPoint(Input.mousePosition));
+
         if (!aimingMode)
             return;
+
+        band.SetPosition(1, projectile.transform.position);
 
         Vector3 mousePos2D = Input.mousePosition;
         mousePos2D.z = -Camera.main.transform.position.z;
@@ -89,6 +109,19 @@ public class Slingshot : MonoBehaviour
 
             MissionDemolition.ShotsFired();
             ProjectileLine.S.poi = projectile;
+            ResetBand();
         }
+    }
+
+    void ResetBand()
+    {
+        Vector3[] restingBandPositions =
+{
+            leftArm.transform.position,
+            new Vector3(-12,-8.5f,0),
+            rightArm.transform.position
+        };
+
+        band.SetPositions(restingBandPositions);
     }
 }
