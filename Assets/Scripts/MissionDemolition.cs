@@ -11,6 +11,8 @@ public class MissionDemolition : MonoBehaviour
     public Text uitLevel;
     public Text uitShots;
     public Text uitButton;
+    public Button uibPrevious;
+    public Button uibNext;
 
     public Vector3 castlePos;
     public GameObject[] castles;
@@ -27,6 +29,9 @@ public class MissionDemolition : MonoBehaviour
     void Start()
     {
         S = this;
+
+        uibPrevious.onClick.AddListener(PreviousLevel);
+        uibNext.onClick.AddListener(NextLevel);
 
         level = 0;
         levelMax = castles.Length;
@@ -109,6 +114,16 @@ public class MissionDemolition : MonoBehaviour
         level++;
         if (level == levelMax)
             level = 0;
+
+        StartLevel();
+    }
+
+    void PreviousLevel()
+    {
+        if (level == 0)
+            level = levelMax - 1;
+        else
+            level--;
 
         StartLevel();
     }
