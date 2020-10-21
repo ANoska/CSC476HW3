@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,11 +25,21 @@ public class ProjectileLine : MonoBehaviour
             m_Poi = value;
             if (m_Poi != null)
             {
+                SaveLine();
                 line.enabled = false;
                 points = new List<Vector3>();
                 AddPoint();
             }
         }
+    }
+
+    private void SaveLine()
+    {
+        var oldLine = GameObject.Find("OldLine_1");
+        var lr = oldLine.GetComponent<LineRenderer>();
+        lr.positionCount = line.positionCount;
+        lr.SetPositions(points.ToArray());
+        lr.material.color = Color.grey;
     }
 
     // Returns the location of the most recently added point
